@@ -2,6 +2,7 @@ package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class Login extends AppCompatActivity {
 
@@ -134,14 +136,16 @@ public class Login extends AppCompatActivity {
                     String userId = result.getString("userId");
                     String token = result.getString("token");
 
-
                     //Сохраняем в Shared Preferencies
 
                     SharedPreferences preferences = getSharedPreferences("TravelPrefs",MODE_PRIVATE);
                     preferences.edit().putString("userId",userId).commit();
                     preferences.edit().putString("token",token).commit();
 
-                    return sb.toString();
+                    //Переход к поездкам
+                    Intent intent = new Intent(getBaseContext(), ListOfTrips.class);
+                    startActivity(intent);
+                    return "";
                 }
                 else{
                     return new String("false : " + responseCode);
@@ -155,7 +159,9 @@ public class Login extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result){
-            Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+            if (result != ""){
+                Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+            }
         }
     }
 
