@@ -2,6 +2,7 @@ package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.JsonWriter;
@@ -133,6 +134,12 @@ public class Login extends AppCompatActivity {
                     String userId = result.getString("userId");
                     String token = result.getString("token");
 
+
+                    //Сохраняем в Shared Preferencies
+
+                    SharedPreferences preferences = getSharedPreferences("TravelPrefs",MODE_PRIVATE);
+                    preferences.edit().putString("userId",userId).commit();
+                    preferences.edit().putString("token",token).commit();
 
                     return sb.toString();
                 }
