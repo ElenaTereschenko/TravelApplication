@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,17 +18,22 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListOfTrips extends AppCompatActivity {
 
+    public List<String> idTrips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_trips);
 
-        //Получаем все поездки
+        //Получаем ID всeх поездок
         new SendGetRequest().execute();
+
+        //Получаем поездки по ID
 
     }
 
@@ -68,20 +74,13 @@ public class ListOfTrips extends AppCompatActivity {
 
                     //Парсим JSON
 
-                    JSONObject result = new JSONObject(sb.toString());
-/*
-                    String userId = result.getString("userId");
-                    String token = result.getString("token");
+                    JSONArray result = new JSONArray(sb.toString());
+                    idTrips = new ArrayList<>();
 
-                    //Сохраняем в Shared Preferencies
+                    for (int i = 0; i < result.length(); i++){
+                        idTrips.add(result.getString(i));
+                    }
 
-                    SharedPreferences preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
-                    preferences.edit().putString("userId", userId).commit();
-                    preferences.edit().putString("token", token).commit();
-
-                    //Переход к поездкам
-                    Intent intent = new Intent(getBaseContext(), ListOfTrips.class);
-                    startActivity(intent);*/
                     return "";
                 } else {
                     return new String("false : " + responseCode);
