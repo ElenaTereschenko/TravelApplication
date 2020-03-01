@@ -1,6 +1,7 @@
 package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,20 +25,47 @@ import java.util.List;
 public class ListOfTrips extends AppCompatActivity {
 
     public List<String> idTrips;
+    public List<Trip> trips;
+    private SharedPreferences preferences;
+    private String token;
+    private RecyclerView listOfTrips;
+
+    private String tripId;
+    private String userId;
+    private String nameTrip;
+    private String descriptionTrip;
+    private List<String> phototsIdTrip;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_trips);
 
-        //Получаем ID всeх поездок
-        new SendGetRequest().execute();
+        try {
+            //Получаем ID всeх поездок
+            new SendGetGetAll().execute().get();
+        }catch (Exception e){
+            String s = e.getMessage();
+        }
+
 
         //Получаем поездки по ID
+        trips = new ArrayList<>();
+        if (idTrips.size() > 0){
+            for (int i =0; i < idTrips.size(); i++){
+                tripId = idTrips.get(i);
+                new SendGetRead().execute();
+            }
+        }
+
+        int howitwork = trips.size();
+
+
 
     }
 
-    public class SendGetRequest extends AsyncTask<String, Void, String> {
+    public class SendGetGetAll extends AsyncTask<String, Void, String> {
         protected void onPreExecute() {
         }
 
@@ -45,8 +73,8 @@ public class ListOfTrips extends AppCompatActivity {
             try {
 
                 //Получаем токен
-                SharedPreferences preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
-                String token = preferences.getString("token", "");
+                 preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
+                 token = preferences.getString("token", "");
 
                 //Формируем запрос
                 URL url = new URL("http://travelapp.fun/api/trip/getall"+"?token="+token);
@@ -80,6 +108,74 @@ public class ListOfTrips extends AppCompatActivity {
                     for (int i = 0; i < result.length(); i++){
                         idTrips.add(result.getString(i));
                     }
+
+                    return "";
+                } else {
+                    return new String("false : " + responseCode);
+                }
+
+
+            } catch (Exception ex) {
+                return new String("Exception: " + ex.getMessage());
+            }
+        }
+    }
+
+    public class SendGetRead extends AsyncTask<String, Void, String>{
+        protected void onPreExecute() {
+        }
+
+        protected String doInBackground(String... arg0) {
+            try {
+
+                //Получаем токен
+                preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
+                token = preferences.getString("token", "");
+
+                //Формируем запрос
+                URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + tripId + "&token=" + token);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(15000);
+                connection.setRequestMethod("GET");
+
+                connection.setDoInput(true);
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK ) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+
+                    //Парсим JSON
+
+                    JSONObject result = new JSONObject(sb.toString());
+
+                    userId = result.getString("userId");
+                    nameTrip = result.getString("name");
+                    descriptionTrip = result.getString("textField");
+                    phototsIdTrip = new ArrayList<>();
+
+                    if (result.getJSONArray("photos")!= null) {
+                        JSONArray photos = result.getJSONArray("photos");
+                        for (int i = 0; i < photos.length(); i++) {
+                            phototsIdTrip.add(photos.getString(i));
+                        }
+                    }
+
+                    //Добавляем поездки
+
+                    Trip trip = new Trip (tripId, userId, nameTrip, descriptionTrip, phototsIdTrip);
+                    trips.add(trip);
 
                     return "";
                 } else {

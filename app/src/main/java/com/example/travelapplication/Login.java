@@ -6,30 +6,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.JsonWriter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
 
 public class Login extends AppCompatActivity {
 
@@ -57,26 +48,6 @@ public class Login extends AppCompatActivity {
                     password = editText_login_password.getText().toString();
 
                     new SendPostRequest().execute();
-/*
-
-                    HttpClient httpClient = HttpClients.createDefault();
-                    HttpPost httpPost = new HttpPost("http://tracelapp.fun/api/auth/login");
-
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("Email", username));
-                    params.add(new BasicNameValuePair("Password",password));
-                    httpPost.setEntity(new UrlEncodedFormEntity(params));
-
-                    HttpResponse response = httpClient.execute(httpPost);
-                    HttpEntity entity = response.getEntity();
-
-                    if (entity != null){
-                        try (InputStream inputStream = entity.getContent()){
-                            System.out.println("УРАААА");
-                        }
-                    }
-
-                     */
 
                 } catch (Exception ex){
                     String e = new String("Exception: " + ex.getMessage());
