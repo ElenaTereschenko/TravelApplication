@@ -1,6 +1,7 @@
 package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -28,7 +29,9 @@ public class ListOfTrips extends AppCompatActivity {
     public List<Trip> trips;
     private SharedPreferences preferences;
     private String token;
+
     private RecyclerView listOfTrips;
+    private ListOfTripsAdapter listOfTripsAdapter;
 
     private String tripId;
     private String userId;
@@ -59,10 +62,14 @@ public class ListOfTrips extends AppCompatActivity {
             }
         }
 
-        int howitwork = trips.size();
+        //Строим интерфейс
+        listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        listOfTrips.setLayoutManager(layoutManager);
 
-
-
+        listOfTrips.setHasFixedSize(true);
+        listOfTripsAdapter = new ListOfTripsAdapter(trips.size());
+        listOfTrips.setAdapter(listOfTripsAdapter);
     }
 
     public class SendGetGetAll extends AsyncTask<String, Void, String> {
