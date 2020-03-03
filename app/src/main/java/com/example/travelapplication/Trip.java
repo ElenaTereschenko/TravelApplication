@@ -9,13 +9,23 @@ public class Trip {
     private String name;
     private String description;
     private List<String> photosId;
+    private List<String> placesID;
+    private List<String> goodsId;
+    private List<String> goalsId;
+    private int fromDate;
+    private int toDate;
 
-    public Trip (String id, String userId, String name, String description, List<String> photosId){
+    public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, int fromDate, int toDate){
         setId(id);
         setUserId(userId);
         setName(name);
         setDescription(description);
         setPhotosId(photosId);
+        setPlacesID(placesID);
+        setGoodsId(goodsId);
+        setGoalsId(goalsId);
+        setFromDate(fromDate);
+        setToDate(toDate);
     }
 
     public String getId() {
@@ -56,5 +66,45 @@ public class Trip {
 
     public void setPhotosId(List<String> photosId) {
         this.photosId = photosId;
+    }
+
+    public List<String> getPlacesID(){
+        return placesID;
+    }
+
+    public void setPlacesID(List<String> placesID){
+        this.placesID = placesID;
+    }
+
+    public List<String> getGoodsId(){
+        return goodsId;
+    }
+
+    public void setGoodsId(List<String> goodsId){
+        this.goodsId = goodsId;
+    }
+
+    public List<String> getGoalsId(){
+        return goalsId;
+    }
+
+    public void setGoalsId(List<String> goalsId){
+        this.goalsId = goalsId;
+    }
+
+    public int getFromDate(){
+        return fromDate;
+    }
+
+    public  void setFromDate(int fromDate){
+        this.fromDate = fromDate;
+    }
+
+    public int getToDate(){
+        return toDate;
+    }
+
+    public void setToDate(int toDate){
+        this.toDate = toDate;
     }
 }

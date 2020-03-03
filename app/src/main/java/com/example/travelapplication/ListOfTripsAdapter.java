@@ -9,14 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.NumberlistTripsHolder> {
 
-    private static int viewHolderCount;
-    private int numberItems;
 
-    public ListOfTripsAdapter (int numberOfItems){
-        numberOfItems = numberOfItems;
-        viewHolderCount = 0;
+    private List<Trip> trips;
+
+    public ListOfTripsAdapter (List<Trip> trips){
+        this.trips = trips;
     }
 
     @NonNull
@@ -41,7 +42,7 @@ public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.
 
     @Override
     public int getItemCount() {
-        return numberItems;
+        return trips.size();
     }
 
     class NumberlistTripsHolder extends RecyclerView.ViewHolder{
@@ -54,8 +55,8 @@ public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.
             nameTrip = itemView.findViewById(R.id.textview_listTrip_name);
         }
 
-        void bind(int nameOfTrip){
-            nameTrip.setText(nameOfTrip);
+        void bind(int position){
+            nameTrip.setText(trips.get(position).getName());
         }
     }
 }

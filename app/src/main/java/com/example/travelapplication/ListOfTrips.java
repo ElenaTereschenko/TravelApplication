@@ -37,7 +37,12 @@ public class ListOfTrips extends AppCompatActivity {
     private String userId;
     private String nameTrip;
     private String descriptionTrip;
-    private List<String> phototsIdTrip;
+    private List<String> photosIdTrip;
+    private List<String> placesIdTrip;
+    private List<String> goodsIdTrip;
+    private List<String> goalsIdTrip;
+    private int fromDateTrip;
+    private int toDateTrip;
 
 
     @Override
@@ -53,23 +58,28 @@ public class ListOfTrips extends AppCompatActivity {
         }
 
 
-        //Получаем поездки по ID
-        trips = new ArrayList<>();
-        if (idTrips.size() > 0){
-            for (int i =0; i < idTrips.size(); i++){
-                tripId = idTrips.get(i);
-                new SendGetRead().execute();
+        try {
+            //Получаем поездки по ID
+            trips = new ArrayList<>();
+            if (idTrips.size() > 0) {
+                for (int i = 0; i < idTrips.size(); i++) {
+                    new SendGetRead(idTrips.get(i)).execute();
+                }
             }
-        }
+        }catch (Exception e){
+        String s = e.getMessage();
+    }
 
-        //Строим интерфейс
+    //Строим интерфейс
         listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         listOfTrips.setLayoutManager(layoutManager);
 
         listOfTrips.setHasFixedSize(true);
-        listOfTripsAdapter = new ListOfTripsAdapter(trips.size());
+        listOfTripsAdapter = new ListOfTripsAdapter(trips);
         listOfTrips.setAdapter(listOfTripsAdapter);
+
+
     }
 
     public class SendGetGetAll extends AsyncTask<String, Void, String> {
@@ -129,18 +139,26 @@ public class ListOfTrips extends AppCompatActivity {
     }
 
     public class SendGetRead extends AsyncTask<String, Void, String>{
+
+        private String id;
+
+        public SendGetRead (String id){
+            this.id= id;
+        }
+
         protected void onPreExecute() {
         }
 
         protected String doInBackground(String... arg0) {
             try {
 
+
                 //Получаем токен
                 preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
                 token = preferences.getString("token", "");
 
                 //Формируем запрос
-                URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + tripId + "&token=" + token);
+                URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + id + "&token=" + token);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setReadTimeout(15000);
@@ -149,7 +167,14 @@ public class ListOfTrips extends AppCompatActivity {
 
                 connection.setDoInput(true);
 
+
+
+
                 int responseCode = connection.getResponseCode();
+
+                if (id.equals("0e1f9a8f-ca4b-49be-b00a-1076b0cb73fc")){
+                    int i = 0 ;
+                }
 
                 if (responseCode == HttpURLConnection.HTTP_OK ) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -163,25 +188,57 @@ public class ListOfTrips extends AppCompatActivity {
 
                     in.close();
 
+
                     //Парсим JSON
 
                     JSONObject result = new JSONObject(sb.toString());
 
-                    userId = result.getString("userId");
-                    nameTrip = result.getString("name");
-                    descriptionTrip = result.getString("textField");
-                    phototsIdTrip = new ArrayList<>();
+                    userId = result.getString("UserId");
+                    nameTrip = result.getString("Name");
+                    descriptionTrip = result.getString("TextField");
+                    photosIdTrip = new ArrayList<>();
 
-                    if (result.getJSONArray("photos")!= null) {
-                        JSONArray photos = result.getJSONArray("photos");
+                    if (result.getJSONArray("PhotosId")!= null) {
+                        JSONArray photos = result.getJSONArray("PhotosId");
                         for (int i = 0; i < photos.length(); i++) {
-                            phototsIdTrip.add(photos.getString(i));
+                            photosIdTrip.add(photos.getString(i));
                         }
                     }
 
+                    placesIdTrip = new ArrayList<>();
+
+                    if (result.getJSONArray("PlacesId")!= null) {
+                        JSONArray places = result.getJSONArray("PlacesId");
+                        for (int i = 0; i < places.length(); i++) {
+                            placesIdTrip.add(places.getString(i));
+                        }
+                    }
+
+                    goodsIdTrip = new ArrayList<>();
+
+                    if (result.getJSONArray("GoodsId")!= null) {
+                        JSONArray goods = result.getJSONArray("GoodsId");
+                        for (int i = 0; i < goods.length(); i++) {
+                            goodsIdTrip.add(goods.getString(i));
+                        }
+                    }
+
+                    goalsIdTrip = new ArrayList<>();
+
+                    if (result.getJSONArray("GoalsId")!= null) {
+                        JSONArray goals = result.getJSONArray("GoalsId");
+                        for (int i = 0; i < goals.length(); i++) {
+                            goalsIdTrip.add(goals.getString(i));
+                        }
+                    }
+
+                    /*
+                    fromDateTrip = result.getInt("FromDate");
+                    toDateTrip = result.getInt ("ToDate");
+                    */
                     //Добавляем поездки
 
-                    Trip trip = new Trip (tripId, userId, nameTrip, descriptionTrip, phototsIdTrip);
+                    Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDateTrip, toDateTrip);
                     trips.add(trip);
 
                     return "";
