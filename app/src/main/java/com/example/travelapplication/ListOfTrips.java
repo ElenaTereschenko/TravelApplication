@@ -18,6 +18,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,14 +63,17 @@ public class ListOfTrips extends AppCompatActivity {
             //Получаем поездки по ID
             trips = new ArrayList<>();
             if (idTrips.size() > 0) {
-                for (int i = 0; i < idTrips.size(); i++) {
-                    new SendGetRead(idTrips.get(i)).execute();
-                }
+
+                    String[] params = new String[idTrips.size()];
+                    params = idTrips.toArray(params);
+                    new SendGetRead().execute(params).get();
+
             }
         }catch (Exception e){
         String s = e.getMessage();
     }
 
+        int i =trips.size();
     //Строим интерфейс
         listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -140,116 +144,123 @@ public class ListOfTrips extends AppCompatActivity {
 
     public class SendGetRead extends AsyncTask<String, Void, String>{
 
-        private String id;
 
-        public SendGetRead (String id){
-            this.id= id;
-        }
+
 
         protected void onPreExecute() {
         }
 
-        protected String doInBackground(String... arg0) {
+        protected String doInBackground(String... ids) {
             try {
-
 
                 //Получаем токен
                 preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
                 token = preferences.getString("token", "");
 
-                //Формируем запрос
-                URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + id + "&token=" + token);
+                for (String id : ids){
+                    //Формируем запрос
+                    URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + id + "&token=" + token);
 
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setReadTimeout(15000);
-                connection.setConnectTimeout(15000);
-                connection.setRequestMethod("GET");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setReadTimeout(15000);
+                    connection.setConnectTimeout(15000);
+                    connection.setRequestMethod("GET");
 
-                connection.setDoInput(true);
+                    connection.setDoInput(true);
 
+                    int responseCode = connection.getResponseCode();
 
+                    if (responseCode == HttpURLConnection.HTTP_OK ) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        StringBuffer sb = new StringBuffer("");
+                        String line = "";
 
+                        while ((line = in.readLine()) != null) {
+                            sb.append(line);
+                            break;
+                        }
 
-                int responseCode = connection.getResponseCode();
+                        in.close();
 
-                if (id.equals("0e1f9a8f-ca4b-49be-b00a-1076b0cb73fc")){
-                    int i = 0 ;
+                        //Парсим JSON
+                        Trip trip = doTripFromJSON(sb.toString(), id);
+
+                        if(trip!=null){
+                            trips.add(trip);
+                        }
+
+                    } else {
+                        return new String("false : " + responseCode);
+                    }
                 }
 
-                if (responseCode == HttpURLConnection.HTTP_OK ) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuffer sb = new StringBuffer("");
-                    String line = "";
-
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                        break;
-                    }
-
-                    in.close();
-
-
-                    //Парсим JSON
-
-                    JSONObject result = new JSONObject(sb.toString());
-
-                    userId = result.getString("UserId");
-                    nameTrip = result.getString("Name");
-                    descriptionTrip = result.getString("TextField");
-                    photosIdTrip = new ArrayList<>();
-
-                    if (result.getJSONArray("PhotosId")!= null) {
-                        JSONArray photos = result.getJSONArray("PhotosId");
-                        for (int i = 0; i < photos.length(); i++) {
-                            photosIdTrip.add(photos.getString(i));
-                        }
-                    }
-
-                    placesIdTrip = new ArrayList<>();
-
-                    if (result.getJSONArray("PlacesId")!= null) {
-                        JSONArray places = result.getJSONArray("PlacesId");
-                        for (int i = 0; i < places.length(); i++) {
-                            placesIdTrip.add(places.getString(i));
-                        }
-                    }
-
-                    goodsIdTrip = new ArrayList<>();
-
-                    if (result.getJSONArray("GoodsId")!= null) {
-                        JSONArray goods = result.getJSONArray("GoodsId");
-                        for (int i = 0; i < goods.length(); i++) {
-                            goodsIdTrip.add(goods.getString(i));
-                        }
-                    }
-
-                    goalsIdTrip = new ArrayList<>();
-
-                    if (result.getJSONArray("GoalsId")!= null) {
-                        JSONArray goals = result.getJSONArray("GoalsId");
-                        for (int i = 0; i < goals.length(); i++) {
-                            goalsIdTrip.add(goals.getString(i));
-                        }
-                    }
-
-                    /*
-                    fromDateTrip = result.getInt("FromDate");
-                    toDateTrip = result.getInt ("ToDate");
-                    */
-                    //Добавляем поездки
-
-                    Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDateTrip, toDateTrip);
-                    trips.add(trip);
-
-                    return "";
-                } else {
-                    return new String("false : " + responseCode);
-                }
 
 
             } catch (Exception ex) {
                 return new String("Exception: " + ex.getMessage());
             }
+
+            return "";
+        }
+
+        private Trip doTripFromJSON(String resultString,String id ){
+            try {
+                JSONObject result = new JSONObject(resultString);
+
+                userId = result.getString("userId");
+                nameTrip = result.getString("name");
+                descriptionTrip = result.getString("textField");
+                photosIdTrip = new ArrayList<>();
+
+                if ( !result.isNull("photoIds")) {
+                    JSONArray photos = result.getJSONArray("photoIds");
+                    for (int i = 0; i < photos.length(); i++) {
+                        photosIdTrip.add(photos.getString(i));
+                    }
+                }
+
+                placesIdTrip = new ArrayList<>();
+
+                if (!result.isNull("placeIds")) {
+                    JSONArray places = result.getJSONArray("placeIds");
+                    for (int i = 0; i < places.length(); i++) {
+                        placesIdTrip.add(places.getString(i));
+                    }
+                }
+
+                goodsIdTrip = new ArrayList<>();
+
+
+                if (!result.isNull("goodsIds") ) {
+                    JSONArray goods = result.getJSONArray("goodIds");
+                    for (int i = 0; i < goods.length(); i++) {
+                        goodsIdTrip.add(goods.getString(i));
+                    }
+                }
+
+                goalsIdTrip = new ArrayList<>();
+
+                if (!result.isNull("goalIds")) {
+                    JSONArray goals = result.getJSONArray("goalIds");
+                    for (int i = 0; i < goals.length(); i++) {
+                        goalsIdTrip.add(goals.getString(i));
+                    }
+                }
+
+                    /*
+                    fromDateTrip = result.getInt("FromDate");
+                    toDateTrip = result.getInt ("ToDate");
+                    */
+                //Добавляем поездки
+
+                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDateTrip, toDateTrip);
+                return trip;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+            return null;
         }
     }
 }

@@ -104,8 +104,8 @@ public class Login extends AppCompatActivity {
 
                     JSONObject result = new JSONObject(sb.toString());
 
-                    String userId = result.getString("UserId");
-                    String token = result.getString("Token");
+                    String userId = result.getString("userId");
+                    String token = result.getString("token");
 
                     //Сохраняем в Shared Preferencies
 
