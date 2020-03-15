@@ -48,15 +48,18 @@ public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.
     class NumberlistTripsHolder extends RecyclerView.ViewHolder{
 
         TextView nameTrip;
+        TextView periodTrip;
 
         public NumberlistTripsHolder(View itemView){
             super(itemView);
 
             nameTrip = itemView.findViewById(R.id.textview_listTrip_name);
+            periodTrip = itemView.findViewById(R.id.textView_listTrip_period);
         }
 
         void bind(int position){
             nameTrip.setText(trips.get(position).getName());
+            periodTrip.setText(trips.get(position).getPeriod());
         }
     }
 }

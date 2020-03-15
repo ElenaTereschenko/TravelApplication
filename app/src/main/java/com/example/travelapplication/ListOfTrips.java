@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +25,7 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListOfTrips extends AppCompatActivity {
@@ -42,8 +46,13 @@ public class ListOfTrips extends AppCompatActivity {
     private List<String> placesIdTrip;
     private List<String> goodsIdTrip;
     private List<String> goalsIdTrip;
-    private int fromDateTrip;
-    private int toDateTrip;
+    private Long fromDateTrip;
+    private Long toDateTrip;
+    private Date toDate;
+    private Date fromDate;
+
+    private static final long  TICKS_AT_EPOCH = 621355968000000000L;
+    private static final long TICKS_PER_MILLISECOND = 10000;
 
 
     @Override
@@ -247,13 +256,23 @@ public class ListOfTrips extends AppCompatActivity {
                     }
                 }
 
-                    /*
-                    fromDateTrip = result.getInt("FromDate");
-                    toDateTrip = result.getInt ("ToDate");
-                    */
+                fromDate = null;
+                toDate = null;
+
+                if ( !result.isNull("fromDate")) {
+                    fromDateTrip = result.getLong("fromDate");
+                    fromDate = new Date((fromDateTrip - TICKS_AT_EPOCH)/TICKS_PER_MILLISECOND);
+                }
+
+                if ( !result.isNull("toDate")) {
+                    toDateTrip = result.getLong ("toDate");
+                    toDate = new Date((toDateTrip - TICKS_AT_EPOCH)/TICKS_PER_MILLISECOND);
+                }
+
+
                 //Добавляем поездки
 
-                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDateTrip, toDateTrip);
+                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDate, toDate);
                 return trip;
             }catch (Exception e){
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.travelapplication;
 
 
+import java.util.Date;
 import java.util.List;
 
 public class Trip {
@@ -12,10 +13,10 @@ public class Trip {
     private List<String> placesID;
     private List<String> goodsId;
     private List<String> goalsId;
-    private int fromDate;
-    private int toDate;
+    private Date fromDate;
+    private Date toDate;
 
-    public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, int fromDate, int toDate){
+    public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, Date fromDate, Date toDate){
         setId(id);
         setUserId(userId);
         setName(name);
@@ -92,19 +93,26 @@ public class Trip {
         this.goalsId = goalsId;
     }
 
-    public int getFromDate(){
+    public Date getFromDate(){
         return fromDate;
     }
 
-    public  void setFromDate(int fromDate){
+    public  void setFromDate(Date fromDate){
         this.fromDate = fromDate;
     }
 
-    public int getToDate(){
+    public Date getToDate(){
         return toDate;
     }
 
-    public void setToDate(int toDate){
+    public void setToDate(Date toDate){
         this.toDate = toDate;
+    }
+
+    public String getPeriod(){
+        if(getToDate()!= null && getFromDate()!= null){
+            return getFromDate(). + " - " + getToDate().toString();
+        }
+        return "";
     }
 }
