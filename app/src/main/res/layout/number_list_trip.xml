@@ -6,6 +6,7 @@
     android:padding="0dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_numberListTrip_trip"
         style="@style/MyCardViewStyle"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
@@ -16,37 +17,37 @@
 
         <RelativeLayout
             android:layout_width="315dp"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:padding="0dp">
 
             <TextView
                 android:id="@+id/textview_listTrip_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical|start"
+                android:fontFamily="@font/ubuntu_medium"
                 android:textAllCaps="false"
                 android:textColor="#293A6D"
-                android:fontFamily="@font/ubuntu_medium"
-                android:textSize="24dp"
-                android:layout_gravity="center_vertical|start" />
+                android:textSize="24dp" />
 
             <ImageView
                 android:id="@+id/imageView_listTrip_planeIcon"
                 android:layout_width="37dp"
                 android:layout_height="37dp"
-                android:layout_marginTop="120dp"
+                android:layout_marginTop="70dp"
                 card_view:srcCompat="@drawable/plane_icon" />
 
             <TextView
                 android:id="@+id/textView_listTrip_period"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="77dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textAllCaps="false"
                 android:textColor="#FBB03B"
-                android:layout_marginTop="130dp"
-                android:layout_marginLeft="50dp"
-                android:textSize="14dp"
-                android:layout_gravity="center_vertical|start"/>
+                android:textSize="14dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

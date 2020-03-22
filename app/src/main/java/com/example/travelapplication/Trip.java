@@ -1,10 +1,18 @@
 package com.example.travelapplication;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Trip {
+public class Trip implements Parcelable {
     private String id;
     private String userId;
     private String name;
@@ -13,10 +21,11 @@ public class Trip {
     private List<String> placesID;
     private List<String> goodsId;
     private List<String> goalsId;
+    private List<String> purchasesId;
     private Date fromDate;
     private Date toDate;
 
-    public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, Date fromDate, Date toDate){
+    public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, List<String> purchasesId, Date fromDate, Date toDate){
         setId(id);
         setUserId(userId);
         setName(name);
@@ -25,6 +34,7 @@ public class Trip {
         setPlacesID(placesID);
         setGoodsId(goodsId);
         setGoalsId(goalsId);
+        setPurchasesId(purchasesId);
         setFromDate(fromDate);
         setToDate(toDate);
     }
@@ -93,6 +103,14 @@ public class Trip {
         this.goalsId = goalsId;
     }
 
+    public List<String> getPurchasesId(){
+        return purchasesId;
+    }
+
+    public void setPurchasesId(List<String> purchasesId){
+        this.purchasesId = purchasesId;
+    }
+
     public Date getFromDate(){
         return fromDate;
     }
@@ -111,8 +129,68 @@ public class Trip {
 
     public String getPeriod(){
         if(getToDate()!= null && getFromDate()!= null){
-            return getFromDate(). + " - " + getToDate().toString();
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/M/yyyy");
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fromDate);
+            String formDatestr = calendar.DAY_OF_MONTH + " " + calendar.MONTH + " " + calendar.YEAR;
+
+            calendar.setTime(toDate);
+            String toDatestr = calendar.DAY_OF_MONTH + " " + calendar.MONTH + " " + calendar.YEAR;
+            return new String(sdf1.format(fromDate) + " - " + sdf1.format(toDate));
         }
         return "";
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(userId);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeStringList(photosId);
+        dest.writeStringList(placesID);
+        dest.writeStringList(goodsId);
+        dest.writeStringList(goalsId);
+        dest.writeStringList(purchasesId);
+        dest.writeSerializable(fromDate);
+        dest.writeSerializable(toDate);
+
+    }
+
+    public static final Creator<Trip> CREATOR = new Creator<Trip>() {
+        @Override
+        public Trip createFromParcel(Parcel source) {
+            String id = source.readString();
+            String userid = source.readString();
+            String name = source.readString();
+            String description = source.readString();
+            List<String> photosId = new ArrayList<>();
+            source.readStringList(photosId);
+            List<String> placesId = new ArrayList<>();
+            source.readStringList(placesId);
+            List<String> goodsId = new ArrayList<>();
+            source.readStringList(goodsId);
+            List<String> goalsId = new ArrayList<>();
+            source.readStringList(goalsId);
+            List<String> purchasesId = new ArrayList<>();
+            source.readStringList(purchasesId);
+            Date fromDate = (Date) source.readSerializable();
+            Date toDate = (Date) source.readSerializable();
+
+            return new Trip(id, userid, name, description, photosId,placesId,goodsId,goalsId, purchasesId,fromDate,toDate);
+
+        }
+
+        @Override
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
 }

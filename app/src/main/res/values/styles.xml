@@ -15,4 +15,5 @@
         <item name="contentPaddingLeft">16dp</item>
         <item name="contentPaddingRight">16dp</item>
     </style>
+
 </resources>

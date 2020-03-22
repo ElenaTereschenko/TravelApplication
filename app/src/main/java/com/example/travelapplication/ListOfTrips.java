@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,6 +48,7 @@ public class ListOfTrips extends AppCompatActivity {
     private List<String> placesIdTrip;
     private List<String> goodsIdTrip;
     private List<String> goalsIdTrip;
+    private List<String> purchasesIdTrip;
     private Long fromDateTrip;
     private Long toDateTrip;
     private Date toDate;
@@ -91,6 +94,22 @@ public class ListOfTrips extends AppCompatActivity {
         listOfTrips.setHasFixedSize(true);
         listOfTripsAdapter = new ListOfTripsAdapter(trips);
         listOfTrips.setAdapter(listOfTripsAdapter);
+        final Context context = getBaseContext();
+        listOfTrips.addOnItemTouchListener(
+                new RecyclerItemClickListener(getBaseContext(), listOfTrips, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(context, TripCard.class);
+                        intent.putExtra("trip",trips.get(position));
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                })
+        );
 
 
     }
@@ -256,6 +275,15 @@ public class ListOfTrips extends AppCompatActivity {
                     }
                 }
 
+                purchasesIdTrip = new ArrayList<>();
+
+                if (!result.isNull("purchaseIds")){
+                    JSONArray purchases = result.getJSONArray("purchaseIds");
+                    for (int i = 0; i < purchases.length(); i++){
+                        purchasesIdTrip.add(purchases.getString(i));
+                    }
+                }
+
                 fromDate = null;
                 toDate = null;
 
@@ -272,7 +300,7 @@ public class ListOfTrips extends AppCompatActivity {
 
                 //Добавляем поездки
 
-                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,fromDate, toDate);
+                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,purchasesIdTrip, fromDate, toDate);
                 return trip;
             }catch (Exception e){
                 e.printStackTrace();
