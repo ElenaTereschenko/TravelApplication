@@ -25,6 +25,20 @@ public class Trip implements Parcelable {
     private Date fromDate;
     private Date toDate;
 
+    public Trip(){
+        setId(null);
+        setUserId(null);
+        setName(null);
+        setDescription(null);
+        setPhotosId(null);
+        setPlacesID(null);
+        setGoodsId(null);
+        setGoalsId(null);
+        setPurchasesId(null);
+        setFromDate(null);
+        setToDate(null);
+    }
+
     public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, List<String> purchasesId, Date fromDate, Date toDate){
         setId(id);
         setUserId(userId);

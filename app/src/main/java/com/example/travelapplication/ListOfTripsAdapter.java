@@ -65,7 +65,6 @@ public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.
             nameTrip = itemView.findViewById(R.id.textview_listTrip_name);
             periodTrip = itemView.findViewById(R.id.textView_listTrip_period);
 
-
         }
 
 

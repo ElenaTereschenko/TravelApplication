@@ -2,7 +2,10 @@ package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class TripCard extends AppCompatActivity {
@@ -14,6 +17,8 @@ public class TripCard extends AppCompatActivity {
     public TextView countGood;
     public TextView countPurchase;
     public TextView countPhotos;
+
+    public androidx.cardview.widget.CardView placesTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,8 @@ public class TripCard extends AppCompatActivity {
         countGood = findViewById(R.id.textView_tripCard_countGood);
         countPurchase = findViewById(R.id.textView_tripCard_countPurchase);
         countPhotos = findViewById(R.id.textView_tripCard_countPhotos);
+
+        placesTrip = findViewById(R.id.cardView_tripCard_places);
 
         Bundle arguments = getIntent().getExtras();
         final Trip trip;
@@ -46,7 +53,21 @@ public class TripCard extends AppCompatActivity {
             countPurchase.setText("" + trip.getGoodsId().size());
             countPhotos.setText("" + trip.getPhotosId().size());
         }
+        else{
+            trip = new Trip();
+        }
 
+
+        final Context context = getBaseContext();
+        placesTrip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, PlacesTrip.class);
+                        intent.putExtra("trip", trip);
+                        startActivity(intent);
+                    }
+                });
 
     }
 }
