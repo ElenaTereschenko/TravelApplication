@@ -1,6 +1,8 @@
 package com.example.travelapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -30,6 +32,9 @@ public class PlacesTrip extends AppCompatActivity {
     private List<String> photos;
     private SharedPreferences preferences;
     private String token;
+
+    private RecyclerView listOfPlaces;
+    private PlacesTripAdapter listOfPlacesAdapter;
 
     private static final long  TICKS_AT_EPOCH = 621355968000000000L;
     private static final long TICKS_PER_MILLISECOND = 10000;
@@ -61,6 +66,14 @@ public class PlacesTrip extends AppCompatActivity {
         else{
             trip = new Trip();
         }
+
+        listOfPlaces = findViewById(R.id.recycleview_placesTrip_placesTrip);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        listOfPlaces.setLayoutManager(layoutManager);
+
+        listOfPlaces.setHasFixedSize(true);
+        listOfPlacesAdapter = new PlacesTripAdapter(places);
+        listOfPlaces.setAdapter(listOfPlacesAdapter);
     }
 
     public class SendGetRead extends AsyncTask<String, Void, String> {

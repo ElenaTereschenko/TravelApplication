@@ -1,5 +1,7 @@
 package com.example.travelapplication;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -86,5 +88,15 @@ public class Place {
 
     public void setPhotos(List<String> photos) {
         this.photos = photos;
+    }
+
+    public String getPeriod(){
+        if(date!= null ){
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/M/yyyy");
+
+            return sdf1.format(date);
+        }
+        return "";
     }
 }

@@ -19,6 +19,7 @@ public class TripCard extends AppCompatActivity {
     public TextView countPhotos;
 
     public androidx.cardview.widget.CardView placesTrip;
+    public androidx.cardview.widget.CardView goalsTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class TripCard extends AppCompatActivity {
         countPhotos = findViewById(R.id.textView_tripCard_countPhotos);
 
         placesTrip = findViewById(R.id.cardView_tripCard_places);
+        goalsTrip = findViewById(R.id.cardView_tripCard_goals);
 
         Bundle arguments = getIntent().getExtras();
         final Trip trip;
@@ -68,6 +70,17 @@ public class TripCard extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+        goalsTrip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, GoalsTrip.class);
+                        intent.putExtra("trip", trip);
+                        startActivity(intent);
+                    }
+                }
+        );
 
     }
 }

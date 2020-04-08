@@ -146,12 +146,6 @@ public class Trip implements Parcelable {
 
             SimpleDateFormat sdf1 = new SimpleDateFormat("dd/M/yyyy");
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(fromDate);
-            String formDatestr = calendar.DAY_OF_MONTH + " " + calendar.MONTH + " " + calendar.YEAR;
-
-            calendar.setTime(toDate);
-            String toDatestr = calendar.DAY_OF_MONTH + " " + calendar.MONTH + " " + calendar.YEAR;
             return new String(sdf1.format(fromDate) + " - " + sdf1.format(toDate));
         }
         return "";
