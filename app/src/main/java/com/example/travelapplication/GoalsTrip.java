@@ -11,6 +11,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.EditText;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,6 +48,8 @@ public class GoalsTrip extends AppCompatActivity {
 
     private RecyclerView listOfGoals;
     private GoalsTripAdapter listOfGoalsAdapter;
+    private Button doneButton;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +79,15 @@ public class GoalsTrip extends AppCompatActivity {
             trip = new Trip();
         }
 
+        doneButton = findViewById(R.id.button_goalsTrip_done);
+        fab = findViewById(R.id.fab_goalsTrip);
+
         listOfGoals = findViewById(R.id.recycleview_goalsTrip_goalsTrip);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         listOfGoals.setLayoutManager(layoutManager);
 
         listOfGoals.setHasFixedSize(true);
-        listOfGoalsAdapter = new GoalsTripAdapter(goals);
+        listOfGoalsAdapter = new GoalsTripAdapter(goals,true);
         listOfGoals.setAdapter(listOfGoalsAdapter);
 
         final Context context = getBaseContext();
@@ -102,11 +112,22 @@ public class GoalsTrip extends AppCompatActivity {
 
                     @Override
                     public void onLongItemClick(View view, int position) {
+                        listOfGoalsAdapter.changeVisibility(false);
+                        listOfGoalsAdapter.notifyDataSetChanged();
+                        doneButton.setVisibility(View.VISIBLE);
 
                     }
                 })
         );
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(GoalsTrip.this,AddingGoal.class);
+                intent.putExtra("trip", trip);
+                startActivity(intent);
+            }
+        });
     }
 
     public class SendGetRead extends AsyncTask<String, Void, String> {

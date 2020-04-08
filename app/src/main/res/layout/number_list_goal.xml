@@ -32,6 +32,14 @@
                 android:checkMark="@drawable/checkbox_selector"
                 android:checked="false"
                 />
+            <EditText
+                android:id="@+id/editText_numberListGoal_goal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textAllCaps="false"
+                android:textColor="#293A6D"
+                android:textSize="14dp"/>
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
