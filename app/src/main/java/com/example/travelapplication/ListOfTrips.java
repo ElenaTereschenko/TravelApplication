@@ -39,6 +39,7 @@ public class ListOfTrips extends AppCompatActivity {
 
     private RecyclerView listOfTrips;
     private ListOfTripsAdapter listOfTripsAdapter;
+    private FloatingActionButton fab;
 
     private String tripId;
     private String userId;
@@ -85,11 +86,16 @@ public class ListOfTrips extends AppCompatActivity {
         String s = e.getMessage();
     }
 
+       
+
+
         int i =trips.size();
     //Строим интерфейс
         listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         listOfTrips.setLayoutManager(layoutManager);
+
+        fab = findViewById(R.id.fab_listOfTrips);
 
         listOfTrips.setHasFixedSize(true);
         listOfTripsAdapter = new ListOfTripsAdapter(trips);
@@ -111,6 +117,13 @@ public class ListOfTrips extends AppCompatActivity {
                 })
         );
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(ListOfTrips.this,AddingTrip.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -226,6 +239,7 @@ public class ListOfTrips extends AppCompatActivity {
 
             } catch (Exception ex) {
                 return new String("Exception: " + ex.getMessage());
+
             }
 
             return "";
