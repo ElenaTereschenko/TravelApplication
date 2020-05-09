@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +30,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListOfTrips extends AppCompatActivity {
 
@@ -58,270 +63,16 @@ public class ListOfTrips extends AppCompatActivity {
     private static final long  TICKS_AT_EPOCH = 621355968000000000L;
     private static final long TICKS_PER_MILLISECOND = 10000;
 
+    private ListOfTripsPresenter listOfTripsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_trips);
-
-        try {
-            //Получаем ID всeх поездок
-            new SendGetGetAll().execute().get();
-        }catch (Exception e){
-            String s = e.getMessage();
-        }
-
-
-        try {
-            //Получаем поездки по ID
-            trips = new ArrayList<>();
-            if (idTrips.size() > 0) {
-
-                    String[] params = new String[idTrips.size()];
-                    params = idTrips.toArray(params);
-                    new SendGetRead().execute(params).get();
-
-            }
-        }catch (Exception e){
-        String s = e.getMessage();
-    }
-
-       
-
-
-        int i =trips.size();
-    //Строим интерфейс
         listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        listOfTrips.setLayoutManager(layoutManager);
-
         fab = findViewById(R.id.fab_listOfTrips);
+        listOfTripsPresenter = new ListOfTripsPresenter(this, listOfTrips,fab);
+        listOfTripsPresenter.sendRequest( this.getBaseContext());
 
-        listOfTrips.setHasFixedSize(true);
-        listOfTripsAdapter = new ListOfTripsAdapter(trips);
-        listOfTrips.setAdapter(listOfTripsAdapter);
-        final Context context = getBaseContext();
-        listOfTrips.addOnItemTouchListener(
-                new RecyclerItemClickListener(getBaseContext(), listOfTrips, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(context, TripCard.class);
-                        intent.putExtra("trip",trips.get(position));
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-
-                    }
-                })
-        );
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(ListOfTrips.this,AddingTrip.class);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    public class SendGetGetAll extends AsyncTask<String, Void, String> {
-        protected void onPreExecute() {
-        }
-
-        protected String doInBackground(String... arg0) {
-            try {
-
-                //Получаем токен
-                 preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
-                 token = preferences.getString("token", "");
-
-                //Формируем запрос
-                URL url = new URL("http://travelapp.fun/api/trip/getall"+"?token="+token);
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setReadTimeout(15000);
-                connection.setConnectTimeout(15000);
-                connection.setRequestMethod("GET");
-
-                connection.setDoInput(true);
-
-                int responseCode = connection.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK || responseCode==405) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuffer sb = new StringBuffer("");
-                    String line = "";
-
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                        break;
-                    }
-
-                    in.close();
-
-                    //Парсим JSON
-
-                    JSONArray result = new JSONArray(sb.toString());
-                    idTrips = new ArrayList<>();
-
-                    for (int i = 0; i < result.length(); i++){
-                        idTrips.add(result.getString(i));
-                    }
-
-                    return "";
-                } else {
-                    return new String("false : " + responseCode);
-                }
-
-
-            } catch (Exception ex) {
-                return new String("Exception: " + ex.getMessage());
-            }
-        }
-    }
-
-    public class SendGetRead extends AsyncTask<String, Void, String>{
-
-
-
-
-        protected void onPreExecute() {
-        }
-
-        protected String doInBackground(String... ids) {
-            try {
-
-                //Получаем токен
-                preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
-                token = preferences.getString("token", "");
-
-                for (String id : ids){
-                    //Формируем запрос
-                    URL url = new URL("http://travelapp.fun/api/trip/read" + "?id=" + id + "&token=" + token);
-
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setReadTimeout(15000);
-                    connection.setConnectTimeout(15000);
-                    connection.setRequestMethod("GET");
-
-                    connection.setDoInput(true);
-
-                    int responseCode = connection.getResponseCode();
-
-                    if (responseCode == HttpURLConnection.HTTP_OK ) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        StringBuffer sb = new StringBuffer("");
-                        String line = "";
-
-                        while ((line = in.readLine()) != null) {
-                            sb.append(line);
-                            break;
-                        }
-
-                        in.close();
-
-                        //Парсим JSON
-                        Trip trip = doTripFromJSON(sb.toString(), id);
-
-                        if(trip!=null){
-                            trips.add(trip);
-                        }
-
-                    } else {
-                        return new String("false : " + responseCode);
-                    }
-                }
-
-
-
-            } catch (Exception ex) {
-                return new String("Exception: " + ex.getMessage());
-
-            }
-
-            return "";
-        }
-
-        private Trip doTripFromJSON(String resultString,String id ){
-            try {
-                JSONObject result = new JSONObject(resultString);
-
-                userId = result.getString("userId");
-                nameTrip = result.getString("name");
-                descriptionTrip = result.getString("textField");
-                photosIdTrip = new ArrayList<>();
-
-                if ( !result.isNull("photoIds")) {
-                    JSONArray photos = result.getJSONArray("photoIds");
-                    for (int i = 0; i < photos.length(); i++) {
-                        photosIdTrip.add(photos.getString(i));
-                    }
-                }
-
-                placesIdTrip = new ArrayList<>();
-
-                if (!result.isNull("placeIds")) {
-                    JSONArray places = result.getJSONArray("placeIds");
-                    for (int i = 0; i < places.length(); i++) {
-                        placesIdTrip.add(places.getString(i));
-                    }
-                }
-
-                goodsIdTrip = new ArrayList<>();
-
-
-                if (!result.isNull("goodsIds") ) {
-                    JSONArray goods = result.getJSONArray("goodIds");
-                    for (int i = 0; i < goods.length(); i++) {
-                        goodsIdTrip.add(goods.getString(i));
-                    }
-                }
-
-                goalsIdTrip = new ArrayList<>();
-
-                if (!result.isNull("goalIds")) {
-                    JSONArray goals = result.getJSONArray("goalIds");
-                    for (int i = 0; i < goals.length(); i++) {
-                        goalsIdTrip.add(goals.getString(i));
-                    }
-                }
-
-                purchasesIdTrip = new ArrayList<>();
-
-                if (!result.isNull("purchaseIds")){
-                    JSONArray purchases = result.getJSONArray("purchaseIds");
-                    for (int i = 0; i < purchases.length(); i++){
-                        purchasesIdTrip.add(purchases.getString(i));
-                    }
-                }
-
-                fromDate = null;
-                toDate = null;
-
-                if ( !result.isNull("fromDate")) {
-                    fromDateTrip = result.getLong("fromDate");
-                    fromDate = new Date((fromDateTrip - TICKS_AT_EPOCH)/TICKS_PER_MILLISECOND);
-                }
-
-                if ( !result.isNull("toDate")) {
-                    toDateTrip = result.getLong ("toDate");
-                    toDate = new Date((toDateTrip - TICKS_AT_EPOCH)/TICKS_PER_MILLISECOND);
-                }
-
-
-                //Добавляем поездки
-
-                Trip trip = new Trip (id, userId, nameTrip, descriptionTrip, photosIdTrip, placesIdTrip, goodsIdTrip, goalsIdTrip,purchasesIdTrip, fromDate, toDate);
-                return trip;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
     }
 }

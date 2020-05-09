@@ -1,13 +1,10 @@
 package com.example.travelapplication;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -52,6 +49,7 @@ public class LoginPresenter extends AppCompatActivity {
 
                 String userId = response.body().userId;
                 String token = response.body().token;
+                Log.e("token",token);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getBaseContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("userId", userId);
