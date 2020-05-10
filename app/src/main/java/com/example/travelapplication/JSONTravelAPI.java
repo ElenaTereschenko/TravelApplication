@@ -17,4 +17,6 @@ public interface JSONTravelAPI {
     Call<List<String>> getAllTrips(@Query("token") String token);
     @GET("api/trip/read")
     Call<Trip> getTrip(@Query("id") String id, @Query("token") String token);
+    @GET("api/place/read")
+    Call<Place> getPlace(@Query("id") String id, @Query("token") String token);
 }
