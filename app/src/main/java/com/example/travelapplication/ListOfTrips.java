@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +72,10 @@ public class ListOfTrips extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_trips);
         listOfTrips = findViewById(R.id.recycleview_listOfTrips_listOfTrips);
         fab = findViewById(R.id.fab_listOfTrips);
-        listOfTripsPresenter = new ListOfTripsPresenter(this, listOfTrips,fab);
+
+        Realm mRealm = ((TravelApplication)getApplication()).getRealm();
+
+        listOfTripsPresenter = new ListOfTripsPresenter(this,mRealm, listOfTrips,fab);
         listOfTripsPresenter.sendRequest( this.getBaseContext());
 
     }

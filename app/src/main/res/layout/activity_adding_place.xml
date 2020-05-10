@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#308089"
+    tools:context=".AddingPlace">
+
+
+    <TextView
+        android:id="@+id/textView_addingPlace_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Добавить место"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button_addingPlace_done"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="550dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/round_button"
+        android:drawableTop="@drawable/sharp_done_white_18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/editText_addingPlace_name"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="30dp"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="start|top"
+        android:ems="10"
+        android:hint="Название"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="14dp"
+         />
+
+    <EditText
+        android:id="@+id/editText_addingPlace_adress"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginEnd="30dp"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="start|top"
+        android:ems="10"
+        android:hint="Адрес"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="14dp"
+        />
+
+    <TextView
+        android:id="@+id/textView_addingPlace_date"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="230dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="start|top"
+        android:hint="Дата посещения"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp"
+        />
+
+    <fragment
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:id="@+id/fragment_addingPlace_placesGoogle"
+        android:layout_width="400dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="30dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:backgroundTint="#FBB03B"
+        android:textSize="14dp"
+        android:fontFamily="@font/montserrat_semibold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_addingPlace_label"></fragment>
+
+
+
+
+
+</RelativeLayout>

@@ -1,8 +1,10 @@
 package com.example.travelapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,13 +61,20 @@ public class ListOfTripsPresenter extends AppCompatActivity {
     private Date toDate;
     private Date fromDate;
 
+    private Realm mRealm;
+    private RealmConfiguration config;
+
     private static final long  TICKS_AT_EPOCH = 621355968000000000L;
     private static final long TICKS_PER_MILLISECOND = 10000;
 
-    public ListOfTripsPresenter(Context context, RecyclerView listOfTrips, FloatingActionButton fab){
+    public ListOfTripsPresenter(Context context, Realm mRealm,RecyclerView listOfTrips, FloatingActionButton fab){
         this.context = context;
         this.listOfTrips = listOfTrips;
         this.fab = fab;
+        Realm.init(context);
+
+        this.mRealm = mRealm;
+
     }
 
     public void setView(ListOfTrips view){
@@ -74,9 +85,6 @@ public class ListOfTripsPresenter extends AppCompatActivity {
 
          preferences = PreferenceManager.getDefaultSharedPreferences(context);
          token = preferences.getString("token","");
-
-
-
 
         NetworkService.getInstance().getTravelAPI().getAllTrips(token).enqueue((new Callback<List<String>>() {
             @Override
@@ -101,11 +109,22 @@ public class ListOfTripsPresenter extends AppCompatActivity {
                     catch (Exception e) {
                         Log.e("exception",e.getMessage());
                     }
-
-
                 }
 
-                int i =trips.size();
+                for(int i = 0; i < trips.size();i++){
+                    Trip tripToSet = trips.get(i);
+                    mRealm.beginTransaction();
+                    TripRealm trip = mRealm.createObject(TripRealm.class);
+                    trip.setId(tripToSet.getId());
+                    trip.setUserId(tripToSet.getUserId());
+                    trip.setName(tripToSet.getName());
+                    trip.setDescription(tripToSet.getDescription());
+                    trip.setFromDateTicks(tripToSet.getFromDateTicks());
+                    trip.setToDateTicks(tripToSet.getToDateTicks());
+
+                    mRealm.commitTransaction();
+
+                }
                 //Строим интерфейс
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -136,8 +155,8 @@ public class ListOfTripsPresenter extends AppCompatActivity {
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view){
-                        Intent intent = new Intent(context,AddingTrip.class);
-                        startActivity(intent);
+                        Intent intent = new Intent(context1,AddingTrip.class);
+                        context.startActivity(intent);
                     }
                 });
             }

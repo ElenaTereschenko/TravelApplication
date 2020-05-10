@@ -1,30 +1,15 @@
 package com.example.travelapplication;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import io.realm.RealmObject;
 
-public class Place {
+public class PlaceRealm extends RealmObject implements PlaceInterface {
     private String id;
     private String userId;
     private String name;
     private String adress;
     private String description;
-    private Date date;
+    private String dateTicks;
     private boolean isVisited;
-    private List<String> photos;
-
-    public Place(String id, String userId, String name, String adress, String description, Date date,boolean isVisited, List<String> photos){
-        setId(id);
-        setUserId(userId);
-        setName(name);
-        setAdress(adress);
-        setDescription(description);
-        setDate(date);
-        setVisited(isVisited);
-        setPhotos(photos);
-    }
 
     public String getId() {
         return id;
@@ -66,12 +51,14 @@ public class Place {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+
+    public void setDateTicks(String dateTicks){
+        this.dateTicks = dateTicks;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+
+    public String getDateTicks() {
+        return   dateTicks;
     }
 
     public boolean getIsVisited(){
@@ -82,21 +69,4 @@ public class Place {
         isVisited = visited;
     }
 
-    public List<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
-    }
-
-    public String getPeriod(){
-        if(date!= null ){
-
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/M/yyyy");
-
-            return sdf1.format(date);
-        }
-        return "";
-    }
 }

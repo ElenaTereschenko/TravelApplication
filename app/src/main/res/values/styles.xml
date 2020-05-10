@@ -15,5 +15,10 @@
         <item name="contentPaddingLeft">16dp</item>
         <item name="contentPaddingRight">16dp</item>
     </style>
+    <style name="PlacesStyle" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimaryDark">#FFFFFF</item>
+        <item name="colorAccent">#FFFFFF</item>
+    </style>
 
 </resources>

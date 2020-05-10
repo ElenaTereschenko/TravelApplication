@@ -47,6 +47,7 @@ public class LoginPresenter extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
+                try{
                 String userId = response.body().userId;
                 String token = response.body().token;
                 Log.e("token",token);
@@ -54,7 +55,10 @@ public class LoginPresenter extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("userId", userId);
                 editor.putString("token", token);
-                editor.apply();
+                editor.apply();}
+                catch (Exception e){
+                    Log.e("Error", e.getMessage());
+                }
             }
 
             @Override

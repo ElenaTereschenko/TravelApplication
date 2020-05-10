@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class PlacesTripAdapter extends RecyclerView.Adapter<PlacesTripAdapter.NumberlistPlacesHolder> {
-    private List<Place> places;
+    private List<PlaceTrip> places;
 
 
-    public PlacesTripAdapter (List<Place> places){
+    public PlacesTripAdapter (List<PlaceTrip> places){
         this.places = places;
     }
 

@@ -3,16 +3,13 @@ package com.example.travelapplication;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Trip implements Parcelable {
+
+public class Trip implements TripInterface,Parcelable {
     private String id;
     private String userId;
     private String name;
@@ -24,6 +21,11 @@ public class Trip implements Parcelable {
     private List<String> purchasesId;
     private Date fromDate;
     private Date toDate;
+    private String fromDateTicks;
+    private String toDateTicks;
+
+    private static final long  TICKS_AT_EPOCH = 621355968000000000L;
+    private static final long TICKS_PER_MILLISECOND = 10000;
 
     public Trip(){
         setId(null);
@@ -37,6 +39,8 @@ public class Trip implements Parcelable {
         setPurchasesId(null);
         setFromDate(null);
         setToDate(null);
+        setFromDateTicks(null);
+        setToDateTicks(null);
     }
 
     public Trip(Trip trip){
@@ -51,6 +55,8 @@ public class Trip implements Parcelable {
         setPurchasesId(trip.getPurchasesId());
         setFromDate(trip.getFromDate());
         setToDate(trip.getToDate());
+        setFromDateTicks(trip.getFromDate());
+        setToDateTicks(trip.getToDate());
     }
 
     public Trip (String id, String userId, String name, String description, List<String> photosId, List<String> placesID, List<String> goodsId, List<String> goalsId, List<String> purchasesId, Date fromDate, Date toDate){
@@ -65,6 +71,8 @@ public class Trip implements Parcelable {
         setPurchasesId(purchasesId);
         setFromDate(fromDate);
         setToDate(toDate);
+        setFromDateTicks(fromDate);
+        setToDateTicks(toDate);
     }
 
     public String getId() {
@@ -143,6 +151,23 @@ public class Trip implements Parcelable {
         return fromDate;
     }
 
+    public void setFromDateTicks(Date fromDate){
+        if(fromDate != null){
+            fromDateTicks = "" + fromDate.getTime() *TICKS_PER_MILLISECOND + TICKS_AT_EPOCH;
+        }
+        else{
+            fromDateTicks = null;
+        }
+    }
+
+    @Override
+    public String getFromDateTicks() {
+        return   fromDateTicks;
+    }
+
+
+
+
     public  void setFromDate(Date fromDate){
         this.fromDate = fromDate;
     }
@@ -150,6 +175,22 @@ public class Trip implements Parcelable {
     public Date getToDate(){
         return toDate;
     }
+
+    public void setToDateTicks(Date toDate) {
+        if(toDateTicks != null){
+            this.toDateTicks = ""+ toDate.getTime() *TICKS_PER_MILLISECOND + TICKS_AT_EPOCH ;
+        }
+        else{
+            toDateTicks = null;
+        }
+    }
+
+    @Override
+    public String getToDateTicks() {
+        return  toDateTicks;
+    }
+
+
 
     public void setToDate(Date toDate){
         this.toDate = toDate;
