@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlacesTripAdapter extends RecyclerView.Adapter<PlacesTripAdapter.NumberlistPlacesHolder> {
@@ -16,7 +17,9 @@ public class PlacesTripAdapter extends RecyclerView.Adapter<PlacesTripAdapter.Nu
 
 
     public PlacesTripAdapter (List<PlaceTrip> places){
+
         this.places = places;
+
     }
 
     @NonNull

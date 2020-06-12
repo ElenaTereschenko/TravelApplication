@@ -61,8 +61,11 @@ public class ListOfTripsPresenter extends AppCompatActivity {
     private Date toDate;
     private Date fromDate;
 
+
     private Realm mRealm;
     private RealmConfiguration config;
+    private ContentValues contentValues;
+
 
     private static final long  TICKS_AT_EPOCH = 621355968000000000L;
     private static final long TICKS_PER_MILLISECOND = 10000;
@@ -71,9 +74,11 @@ public class ListOfTripsPresenter extends AppCompatActivity {
         this.context = context;
         this.listOfTrips = listOfTrips;
         this.fab = fab;
+
         Realm.init(context);
 
         this.mRealm = mRealm;
+
 
     }
 
@@ -111,6 +116,20 @@ public class ListOfTripsPresenter extends AppCompatActivity {
                     }
                 }
 
+                for(int i = 0; i < trips.size();i++) {
+                    Trip tripToSet = trips.get(i);
+                    mRealm.beginTransaction();
+                    TripRealm trip = mRealm.createObject(TripRealm.class);
+                    trip.setId(tripToSet.getId());
+                    trip.setUserId(tripToSet.getUserId());
+                    trip.setName(tripToSet.getName());
+                    trip.setDescription(tripToSet.getDescription());
+                    trip.setFromDateTicks(tripToSet.getFromDateTicks());
+                    trip.setToDateTicks(tripToSet.getToDateTicks());
+
+                    mRealm.commitTransaction();
+
+                }
                 for(int i = 0; i < trips.size();i++){
                     Trip tripToSet = trips.get(i);
                     mRealm.beginTransaction();
@@ -123,6 +142,7 @@ public class ListOfTripsPresenter extends AppCompatActivity {
                     trip.setToDateTicks(tripToSet.getToDateTicks());
 
                     mRealm.commitTransaction();
+
 
                 }
                 //Строим интерфейс

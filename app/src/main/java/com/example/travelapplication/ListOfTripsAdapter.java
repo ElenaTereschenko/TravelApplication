@@ -67,10 +67,6 @@ public class ListOfTripsAdapter extends RecyclerView.Adapter<ListOfTripsAdapter.
         }
 
 
-
-
-
-
         void bind(int position){
             nameTrip.setText(trips.get(position).getName());
             periodTrip.setText(trips.get(position).getPeriod());

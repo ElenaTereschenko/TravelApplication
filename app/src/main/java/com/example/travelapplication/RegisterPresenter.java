@@ -13,15 +13,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class LoginPresenter extends AppCompatActivity {
-    private Login view;
+public class RegisterPresenter extends AppCompatActivity {
+    private Register view;
     private Context context;
 
-    public LoginPresenter(Context context) {
+    public RegisterPresenter(Context context) {
         this.context = context;
     }
 
-    public void setView(Login view) {
+    public void setView(Register view) {
         this.view = view;
     }
 
@@ -38,19 +38,19 @@ public class LoginPresenter extends AppCompatActivity {
     }
 
     public void sendRequest(String username, String password) {
-        LoginBody loginBody = new LoginBody();
-        loginBody.email = username;
-        loginBody.password = password;
+        RegisterBody registerBody = new RegisterBody();
+        registerBody.email = username;
+        registerBody.password = password;
+        registerBody.username = "Леночка";
 
 
-        NetworkService.getInstance().getTravelAPI().postLogin(loginBody).enqueue(new Callback<LoginResponse>() {
+        NetworkService.getInstance().getTravelAPI().postRegister(registerBody).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
                 try{
                 String userId = response.body().userId;
                 String token = response.body().token;
-                Log.e("userId",userId);
                 Log.e("token",token);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getBaseContext());
                 SharedPreferences.Editor editor = preferences.edit();

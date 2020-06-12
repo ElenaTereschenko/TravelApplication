@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -24,15 +25,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
 
 public class PlacesTripPresenter {
     private PlacesTrip view;
     private Context context;
 
+
     public List<PlaceTrip> places;
+
     private String id;
     private String userId;
     private String name;
@@ -43,6 +48,7 @@ public class PlacesTripPresenter {
     private boolean isVisited;
     private List<String> photos;
 
+
     private SharedPreferences preferences;
     private String token;
     private Realm mRealm;
@@ -52,10 +58,13 @@ public class PlacesTripPresenter {
     private PlacesTripAdapter listOfPlacesAdapter;
     private FloatingActionButton fab;
 
+
+
     private static final long  TICKS_AT_EPOCH = 621355968000000000L;
     private static final long TICKS_PER_MILLISECOND = 10000;
 
-    public PlacesTripPresenter(Context context, Realm mRealm, FloatingActionButton fab){
+
+    public PlacesTripPresenter(Context context, Realm mRealm, FloatingActionButton fab) {
         this.context = context;
         this.fab = fab;
 
@@ -64,13 +73,18 @@ public class PlacesTripPresenter {
 
     }
 
+
     public void setView (PlacesTrip view){
         this.view = view;
     }
 
     public void uploadData(Intent intent, RecyclerView listOfPlaces){
 
+
         RealmResults<PlaceRealm> results = mRealm.where(PlaceRealm.class).findAll();
+
+
+
         /*
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -147,6 +161,37 @@ public class PlacesTripPresenter {
                 context.startActivity(intent);
             }
         });
+
+        Bundle arguments = intent.getExtras();
+        final Trip trip;
+        if (arguments != null){
+            trip = arguments.getParcelable("trip");
+            places = new ArrayList<>();
+
+            try {
+                if (trip.getPlacesID().size() > 0) {
+
+                    String[] params = new String[trip.getPlacesID().size()];
+                    params = trip.getPlacesID().toArray(params);
+                    new SendGetRead().execute(params).get();
+
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else{
+            trip = new Trip();
+        }
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        listOfPlaces.setLayoutManager(layoutManager);
+
+        listOfPlaces.setHasFixedSize(true);
+        listOfPlacesAdapter = new PlacesTripAdapter(places);
+        listOfPlaces.setAdapter(listOfPlacesAdapter);
+
     }
 
     public class SendGetRead extends AsyncTask<String, Void, String> {
@@ -190,7 +235,9 @@ public class PlacesTripPresenter {
                         in.close();
 
                         //Парсим JSON
+
                         PlaceTrip place = doPlaceFromJSON(sb.toString(), id);
+
 
                         if(place!=null){
                             places.add(place);
@@ -210,7 +257,9 @@ public class PlacesTripPresenter {
             return "";
         }}
 
+
     private PlaceTrip doPlaceFromJSON(String resultString, String id ){
+
         try {
             JSONObject result = new JSONObject(resultString);
 
@@ -240,7 +289,9 @@ public class PlacesTripPresenter {
 
             //Добавляем место
 
+
             PlaceTrip place = new PlaceTrip(id, userId, name, adress, description, date, isVisited, photos);
+
 
             return place;
         }catch (Exception e){

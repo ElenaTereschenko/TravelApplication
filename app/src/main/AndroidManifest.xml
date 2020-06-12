@@ -14,7 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ListPhotos"></activity>
+        <activity android:name=".AddingPurchase"></activity>
+        <activity android:name=".PurchasesTrip" />
+        <activity android:name=".Register" />
+        <activity android:name=".AddingGood" />
+        <activity android:name=".GoodsTrip" />
+        <activity android:name=".PDFViewer" />
+        <activity android:name=".ListPhotos" />
         <activity android:name=".AddingPlace" />
         <activity android:name=".AddingTrip" />
         <activity android:name=".AddingGoal" />

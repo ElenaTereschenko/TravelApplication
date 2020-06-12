@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,7 +88,7 @@ public class AddingGoal extends AppCompatActivity {
             try {
 
                 //Получаем токен
-                preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
+                preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 token = preferences.getString("token", "");
 
                     //Формируем запрос

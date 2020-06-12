@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class TripCard extends AppCompatActivity {
@@ -18,8 +19,13 @@ public class TripCard extends AppCompatActivity {
     public TextView countPurchase;
     public TextView countPhotos;
 
+    public TextView descriptionTextView;
+    public EditText descriptionEditText;
     public androidx.cardview.widget.CardView placesTrip;
     public androidx.cardview.widget.CardView goalsTrip;
+    public androidx.cardview.widget.CardView photosTrip;
+    public androidx.cardview.widget.CardView goodsTrip;
+    public androidx.cardview.widget.CardView purchasesTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +40,15 @@ public class TripCard extends AppCompatActivity {
         countPurchase = findViewById(R.id.textView_tripCard_countPurchase);
         countPhotos = findViewById(R.id.textView_tripCard_countPhotos);
 
+        descriptionTextView = findViewById(R.id.textView_tripCard_description);
+        descriptionEditText = findViewById(R.id.editText_tripCard_description);
+
         placesTrip = findViewById(R.id.cardView_tripCard_places);
         goalsTrip = findViewById(R.id.cardView_tripCard_goals);
+        photosTrip = findViewById(R.id.cardView_tripCard_photos);
+        goodsTrip = findViewById(R.id.cardView_tripCard_goods);
+        purchasesTrip = findViewById(R.id.cardView_tripCard_purchase);
+
 
         Bundle arguments = getIntent().getExtras();
         final Trip trip;
@@ -49,11 +62,18 @@ public class TripCard extends AppCompatActivity {
             else {
                 descriptionTrip.setText(trip.getDescription());
             }
+
+            countPlaces.setText("2" );
+            countGoals.setText("2" );
+            countGood.setText("1" );
+            countPurchase.setText("1");
+            countPhotos.setText("2" );
+            /*
             countPlaces.setText("" + trip.getPlacesID().size());
             countGoals.setText("" + trip.getGoalsId().size());
             countGood.setText("" + trip.getGoodsId().size());
             countPurchase.setText("" + trip.getGoodsId().size());
-            countPhotos.setText("" + trip.getPhotosId().size());
+            countPhotos.setText("" + trip.getPhotosId().size());*/
         }
         else{
             trip = new Trip();
@@ -78,6 +98,49 @@ public class TripCard extends AppCompatActivity {
                         Intent intent = new Intent(context, GoalsTrip.class);
                         intent.putExtra("trip", trip);
                         startActivity(intent);
+                    }
+                }
+        );
+
+        goodsTrip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, GoodsTrip.class);
+                        intent.putExtra("trip", trip);
+                        startActivity(intent);
+                    }
+                }
+        );
+
+        purchasesTrip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, PurchasesTrip.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+
+        photosTrip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ListPhotos.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+
+        descriptionTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        descriptionTextView.setVisibility(View.INVISIBLE);
+                        descriptionEditText.setText("Добавьте описание поездки");
+                        descriptionEditText.setVisibility(View.VISIBLE);
+
                     }
                 }
         );

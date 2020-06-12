@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">TravelApplication</string>
+    <string-array name="categoryNames">
+        <item>Развлечения</item>
+        <item>Бытовые</item>
+        <item>Супермаркетв</item>
+        <item>Электроника</item>
+        <item>Рестораны</item>
+        <item>Транспорт</item>
+        <item>Без учета</item>
+        <item>Здоровье</item>
+        <item>Подарки</item>
+        <item>Проживание</item>
+        <item>Еда</item>
+        <item>Мобильная связь</item>
+        <item>Шоппинг</item>
+        <item>Ремонт</item>
+    </string-array>
 </resources>

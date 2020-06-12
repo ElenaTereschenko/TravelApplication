@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -160,7 +161,7 @@ public class AddingTrip extends AppCompatActivity {
             try {
 
                 //Получаем токен
-                preferences = getSharedPreferences("TravelPrefs", MODE_PRIVATE);
+                preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 token = preferences.getString("token", "");
 
                 //Формируем запрос
@@ -177,6 +178,8 @@ public class AddingTrip extends AppCompatActivity {
                     Long ticksTo = toDateDate.getTime() *TICKS_PER_MILLISECOND + TICKS_AT_EPOCH ;
                     postDataParams.put("ToDate",ticksTo);
                 }
+
+                Log.e("token",token);
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -195,6 +198,8 @@ public class AddingTrip extends AppCompatActivity {
                 os.close();
 
                 int responseCode = connection.getResponseCode();
+
+                Log.e("responce code","" + responseCode);
 
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="0dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_numberListPurchase_purchase"
+        style="@style/MyCardViewStyle"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        card_view:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="315dp"
+            android:layout_height="wrap_content"
+            android:padding="0dp">
+
+            <CheckedTextView
+                android:id="@+id/checkedTextView_numberListPurchase_purchase"
+
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textAllCaps="false"
+                android:textColor="#293A6D"
+                android:textSize="14dp"
+                android:checkMark="@drawable/checkbox_selector"
+                android:checked="false"
+                />
+            <EditText
+                android:id="@+id/editText_numberListPurchase_purchase"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textAllCaps="false"
+                android:textColor="#293A6D"
+                android:textSize="14dp"/>
+            <TextView
+            android:id="@+id/textView_numberListPurchase_cost"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textAllCaps="false"
+            android:textColor="#FBB03B"
+            android:textSize="18dp"
+            android:text="0"/>
+            <TextView
+                android:id="@+id/textView_numberListPurchase_category"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="85dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textAllCaps="false"
+                android:textColor="#293A6D"
+                android:textSize="12dp"
+                android:text="fffff"/>
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

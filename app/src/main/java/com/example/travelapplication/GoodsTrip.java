@@ -1,74 +1,76 @@
+
 package com.example.travelapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.recyclerview.widget.LinearLayoutManager;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.EditText;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.preference.PreferenceManager;
+        import android.util.Log;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.CheckedTextView;
+        import android.widget.EditText;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+        import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+        import org.json.JSONArray;
+        import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+        import java.io.BufferedReader;
+        import java.io.BufferedWriter;
+        import java.io.InputStreamReader;
+        import java.io.OutputStream;
+        import java.io.OutputStreamWriter;
+        import java.net.HttpURLConnection;
+        import java.net.URL;
+        import java.util.ArrayList;
+        import java.util.Date;
+        import java.util.List;
 
-import static java.lang.Integer.parseInt;
+        import static java.lang.Integer.parseInt;
 
-public class GoalsTrip extends AppCompatActivity {
-    public List<Goal> goals;
+public class GoodsTrip extends AppCompatActivity {
+    public List<Good> goods;
 
     private String id;
     private String userId;
     private String name;
     private String description;
-    private boolean isDone;
+    private boolean isTook;
+    private int count;
 
 
     private SharedPreferences preferences;
     private String token;
 
-    private RecyclerView listOfGoals;
-    private GoalsTripAdapter listOfGoalsAdapter;
+    private RecyclerView listOfGoods;
+    private GoodsTripAdapter listOfGoodsAdapter;
     private Button doneButton;
     private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goals_trip);
+        setContentView(R.layout.activity_goods_trip);
 
         Bundle arguments = getIntent().getExtras();
         final Trip trip;
         if (arguments != null){
             trip = arguments.getParcelable("trip");
-            goals = new ArrayList<>();
+            goods = new ArrayList<>();
 
             try {
-                if (trip.getGoalsId().size() > 0) {
+                if (trip.getGoodsId().size() > 0) {
 
-                    String[] params = new String[trip.getGoalsId().size()];
-                    params = trip.getGoalsId().toArray(params);
-                    new GoalsTrip.SendGetRead().execute(params).get();
+                    String[] params = new String[trip.getGoodsId().size()];
+                    params = trip.getGoodsId().toArray(params);
+                    new GoodsTrip.SendGetRead().execute(params).get();
 
                 }
             }
@@ -80,30 +82,31 @@ public class GoalsTrip extends AppCompatActivity {
             trip = new Trip();
         }
 
-        doneButton = findViewById(R.id.button_goalsTrip_done);
-        fab = findViewById(R.id.fab_goalsTrip);
+        doneButton = findViewById(R.id.button_goodsTrip_done);
+        fab = findViewById(R.id.fab_goodsTrip);
 
-        listOfGoals = findViewById(R.id.recycleview_goalsTrip_goalsTrip);
+        listOfGoods = findViewById(R.id.recycleview_goodsTrip_goodsTrip);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        listOfGoals.setLayoutManager(layoutManager);
+        listOfGoods.setLayoutManager(layoutManager);
 
-        listOfGoals.setHasFixedSize(true);
-        listOfGoalsAdapter = new GoalsTripAdapter(goals,true);
-        listOfGoals.setAdapter(listOfGoalsAdapter);
+        listOfGoods.setHasFixedSize(true);
+        listOfGoodsAdapter = new GoodsTripAdapter(goods,true);
+        listOfGoods.setAdapter(listOfGoodsAdapter);
 
         final Context context = getBaseContext();
-        listOfGoals.addOnItemTouchListener(
-                new RecyclerItemClickListener(getBaseContext(), listOfGoals, new RecyclerItemClickListener.OnItemClickListener() {
+        /*
+        listOfGoods.addOnItemTouchListener(
+                new RecyclerItemClickListener(getBaseContext(), listOfGoods, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        goals.get(position).setDone(!goals.get(position).isDone());
-                       listOfGoalsAdapter.updateDate(goals);
-                       listOfGoalsAdapter.notifyDataSetChanged();
+                        goods.get(position).setTook(!goods.get(position).isTook());
+                        listOfGoodsAdapter .updateDate(goods);
+                        listOfGoodsAdapter .notifyDataSetChanged();
 
                         String[] params = new String[1];
                         params [0] = "" + position;
                         try {
-                            new GoalsTrip.SendPostUpsert().execute(params).get();
+                            new GoodsTrip.SendPostUpsert().execute(params).get();
                         }
                         catch (Exception e){
                             e.printStackTrace();
@@ -113,18 +116,18 @@ public class GoalsTrip extends AppCompatActivity {
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        listOfGoalsAdapter.changeVisibility(false);
-                        listOfGoalsAdapter.notifyDataSetChanged();
+                        listOfGoodsAdapter.changeVisibility(false);
+                        listOfGoodsAdapter.notifyDataSetChanged();
                         doneButton.setVisibility(View.VISIBLE);
 
                     }
                 })
-        );
+        );*/
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(GoalsTrip.this,AddingGoal.class);
+                Intent intent = new Intent(GoodsTrip.this,AddingGood.class);
                 intent.putExtra("trip", trip);
                 startActivity(intent);
             }
@@ -145,7 +148,7 @@ public class GoalsTrip extends AppCompatActivity {
 
                 for (String id : ids){
                     //Формируем запрос
-                    URL url = new URL("http://travelapp.fun/api/goal/read" + "?id=" + id + "&token=" + token);
+                    URL url = new URL("http://travelapp.fun/api/good/read" + "?id=" + id + "&token=" + token);
 
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setReadTimeout(15000);
@@ -169,10 +172,10 @@ public class GoalsTrip extends AppCompatActivity {
                         in.close();
 
                         //Парсим JSON
-                        Goal goal = doGoalFromJSON(sb.toString(), id);
+                        Good good = doGoodFromJSON(sb.toString(), id);
 
-                        if(goal!=null){
-                            goals.add(goal);
+                        if(good!=null){
+                            goods.add(good);
                         }
 
                     } else {
@@ -202,16 +205,17 @@ public class GoalsTrip extends AppCompatActivity {
                 token = preferences.getString("token", "");
 
                 for (String id : ids){
-                    Goal goal = goals.get(parseInt(id));
+                    Good good = goods.get(parseInt(id));
                     //Формируем запрос
-                    URL url = new URL("http://travelapp.fun/api/goal/upsert" + "?token=" + token);
+                    URL url = new URL("http://travelapp.fun/api/good/upsert" + "?token=" + token);
 
                     JSONObject postDataParams = new JSONObject();
-                    postDataParams.put("Id", goal.getId());
-                    postDataParams.put("IsDone",goal.isDone());
-                    postDataParams.put("UserId",goal.getUserId());
-                    postDataParams.put("Name",goal.getName());
-                    postDataParams.put("Description",goal.getDescription());
+                    postDataParams.put("Id", good.getId());
+                    postDataParams.put("IsTook",good.isTook());
+                    postDataParams.put("UserId",good.getUserId());
+                    postDataParams.put("Name",good.getName());
+                    postDataParams.put("Description",good.getDescription());
+                    postDataParams.put("Count", good.getCount());
                     Log.e("params",postDataParams.toString());
 
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -252,22 +256,26 @@ public class GoalsTrip extends AppCompatActivity {
         }}
 
 
-    private Goal doGoalFromJSON(String resultString,String id ){
+    private Good doGoodFromJSON(String resultString,String id ){
         try {
             JSONObject result = new JSONObject(resultString);
 
             userId = result.getString("userId");
             name = result.getString("name");
             description = result.getString("description");
-            isDone = result.getBoolean("isDone");
+            isTook = result.getBoolean("isTook");
+            count = result.getInt("count");
+
+
+                count = 2;
 
 
 
-            //Добавляем цель
+            //Добавляем вещь
 
-            Goal goal = new Goal (id, userId, name, description, isDone);
+            Good good = new Good (id, userId, name, description, count, isTook);
 
-            return goal;
+            return good;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -276,3 +284,4 @@ public class GoalsTrip extends AppCompatActivity {
         return null;
     }
 }
+

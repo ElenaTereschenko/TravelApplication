@@ -14,7 +14,7 @@ public class TravelApplication extends Application {
 
         Realm.init(this);
         config = new RealmConfiguration.Builder()
-                .schemaVersion(1 )
+                .schemaVersion(1)
                 .migration(new TravelMigration())
                 .build();
 

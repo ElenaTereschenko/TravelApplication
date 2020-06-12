@@ -9,17 +9,32 @@ import java.util.Date;
 import java.util.List;
 
 
+
+
+
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.Required;
+
 public class Trip implements TripInterface,Parcelable {
     private String id;
     private String userId;
+
     private String name;
     private String description;
+
     private List<String> photosId;
+
     private List<String> placesID;
+
     private List<String> goodsId;
+
     private List<String> goalsId;
+
     private List<String> purchasesId;
+
     private Date fromDate;
+
     private Date toDate;
     private String fromDateTicks;
     private String toDateTicks;
